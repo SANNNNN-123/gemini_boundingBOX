@@ -1,3 +1,5 @@
 streamlit
 Pillow
 google-generativeai
+opencv-python
+numpy
