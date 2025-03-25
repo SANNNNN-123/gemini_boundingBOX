@@ -1,32 +1,54 @@
-# Bounding with Gemini
+# Advanced Digit Detection System
 
-This Streamlit application allows you to upload an image, send it to the Gemini API for bounding box detection, and visualize the results with labeled bounding boxes drawn directly on the image.
-Automatically generated ReadME. This should be very straight forward.
+This Streamlit application combines two powerful detection methods:
+1. Orange Digit Detection - Specialized detection for digits in orange regions
+2. Gemini API Detection - General purpose object detection using Google's Gemini API
 
-Example Screen cap:
+You can use either method independently or combine them for comprehensive detection results.
 
-![1725058543677](image/README/1725058543677.png)
+
 
 ## Features
 
-- Upload images in JPG, JPEG, or PNG format.
-- Send a prompt to the Gemini API to detect objects and return bounding box coordinates.
-- Visualize detected bounding boxes on the image with customizable labels.
-- Download the processed image with bounding boxes.
+- **Multiple Detection Methods:**
+  - Orange Digit Detection: Specialized algorithm for detecting digits in orange-colored regions
+  - Gemini API Detection: Flexible object detection using Google's Gemini API
+  - Combined Detection: Use both methods simultaneously for comprehensive results
+
+- **Image Processing:**
+  - Upload images in JPG, JPEG, or PNG format
+  - Automatic image resizing for optimal processing
+  - Customizable detection parameters
+  - Real-time visualization of detection results
+
+- **Orange Digit Detection Features:**
+  - Adjustable parameters for area, aspect ratio, and color sensitivity
+  - Automatic numbering of detected digits from left to right
+  - Clear visualization of detected regions with colored bounding boxes
+
+- **Gemini API Features:**
+  - Customizable detection prompts
+  - Multiple Gemini model options
+  - Flexible object detection capabilities
+
+- **Output Options:**
+  - Download processed images with bounding boxes
+  - View JSON data of detected coordinates
+  - Separate visualization for each detection method
 
 ## Prerequisites
 
 Before running the application, ensure you have the following installed:
 
 - Python 3.9 or later
-- A valid Gemini API key
+- A valid Gemini API key (required for Gemini API detection)
 
-### Install Required Python Packages
+### Required Python Packages
 
 Install the necessary Python packages using `pip`:
 
 ```bash
-pip install streamlit Pillow google-generativeai
+pip install streamlit Pillow google-generativeai opencv-python numpy
 ```
 
 ## Running the Application
@@ -37,25 +59,40 @@ pip install streamlit Pillow google-generativeai
    git clone https://github.com/AlexZhangji/bonding_w_geimini.git
    cd bonding_w_geimini
    ```
+
 2. **Run the Streamlit App:**
    Start the application with the following command:
 
    ```bash
-   streamlit run bbox.py
+   streamlit run main.py
    ```
-3. **Enter Your Gemini API Key:**
 
-   - On the sidebar, enter your Gemini API key in the input box. This key is required to interact with the Gemini API.
-4. **Upload an Image:**
+3. **Configure the Application:**
+   - Enter your Gemini API key in the sidebar (if using Gemini API detection)
+   - Adjust detection parameters in the sidebar for orange digit detection
+   - Select your preferred detection method
 
-   - Click "Browse files" to upload a JPG, JPEG, or PNG image from your local machine.
-5. **Enter a Prompt:**
+4. **Upload and Process Images:**
+   - Upload an image using the file uploader
+   - Choose your detection method:
+     - Orange Digit Detection: Specialized for digits in orange regions
+     - Gemini API Detection: General purpose object detection
+     - Combined Detection: Use both methods
+   - For Gemini API detection, enter a custom prompt if desired
+   - Click "Process" to analyze the image
 
-   - Enter a prompt in the text area that describes how you want the Gemini API to detect objects and return bounding boxes.
-6. **Process the Image:**
+5. **View and Download Results:**
+   - View the processed images with detected regions
+   - Download images with bounding boxes
+   - Review detection coordinates in JSON format
 
-   - Click the "Process" button to send the image and prompt to the Gemini API.
-   - Wait for the results, which will display the image with bounding boxes drawn around detected objects.
-7. **Download the Processed Image:**
+## Detection Parameters
 
-   - After processing, you can download the image with the bounding boxes drawn by clicking the "Download Image with Bounding Boxes" button.
+### Orange Digit Detection
+- **Minimum Area:** Adjust the minimum size of detected regions
+- **Maximum Area (%):** Set the maximum size as a percentage of image area
+- **Min/Max Aspect Ratio:** Fine-tune the shape of detected regions
+
+### Gemini API Detection
+- **Model Selection:** Choose between available Gemini models
+- **Custom Prompts:** Customize the detection behavior through text prompts
