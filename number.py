@@ -64,13 +64,16 @@ def draw_bounding_boxes(image, bboxes):
     draw = ImageDraw.Draw(image)
     width, height = image.size
     
-    font = get_font(20)
+    font = get_font(30)  # Larger font size for better visibility
     
     for label, bbox in bboxes.items():
-        color = generate_random_color()
+        # Use a fixed bright color for damage numbers for better visibility
+        color = "#FF00FF"  # Bright magenta
         ymin, xmin, ymax, xmax = [coord / 1000 * dim for coord, dim in zip(bbox, [height, width, height, width])]
         
-        draw.rectangle([xmin, ymin, xmax, ymax], outline=color, width=3)
+        # Use a thicker border for better visibility
+        border_width = 5
+        draw.rectangle([xmin, ymin, xmax, ymax], outline=color, width=border_width)
         
         # Calculate the area needed for the label and add padding
         label_bbox = font.getbbox(label)
@@ -89,18 +92,21 @@ def draw_bounding_boxes(image, bboxes):
 def extract_bounding_boxes(text):
     """
     Extract bounding boxes from the given text, which is expected to be in JSON format.
+    Returns only boxes for digits.
     """
     try:
         bboxes = json.loads(text)
-        return bboxes
+        # Filter to keep only digit labels
+        return {label: bbox for label, bbox in bboxes.items() if label.isdigit() or any(d.isdigit() for d in label)}
     except json.JSONDecodeError:
         import re
         pattern = r'"([^"]+)":\s*\[(\d+),\s*(\d+),\s*(\d+),\s*(\d+)\]'
         matches = re.findall(pattern, text)
-        return {label: list(map(int, coords)) for label, *coords in matches}
+        # Filter to keep only digit labels
+        return {label: list(map(int, coords)) for label, *coords in matches if label.isdigit() or any(d.isdigit() for d in label)}
 
 def main():
-    st.title("Bounding with Gemini")
+    st.title("Game Damage Number Detector")
 
     with st.sidebar:
         st.header("Gemini API Configuration")
@@ -123,7 +129,7 @@ def main():
 
     uploaded_file = st.file_uploader("Choose an image file", type=["jpg", "jpeg", "png"])
     
-    prompt = st.text_area("Enter prompt for Gemini API", "Return bounding boxes as JSON arrays as name of object and its bounding boxes [ymin, xmin, ymax, xmax]. like 'name_1':  [ymin, xmin, ymax, xmax]")
+    prompt = st.text_area("Enter prompt for Gemini API", "Identify and return bounding boxes for damage numbers in the game screenshot. Focus specifically on numerical damage values (like '11791'). Return ONLY damage numbers as JSON with format: 'damage_value': [ymin, xmin, ymax, xmax], where coordinates are in the range 0-1000. Ignore all other text and UI elements.")
 
     if st.button("Process") and uploaded_file is not None and api_key:
         try:
